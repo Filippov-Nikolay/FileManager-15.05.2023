@@ -1,5 +1,7 @@
 ﻿#include "FileManager.h"
+
 #include <direct.h>
+#include <sstream>
 
 /*
     Добавить путь
@@ -24,14 +26,40 @@
     rnf - rename file
     szf - size file
 
+    clfm - close file manager
+
     cin >> command >> from >> where;
+
+    ПЕРЕСМОТРЕТЬ ЦИКЛ В LOGUS
 */
 
 FileManager::FileManager() { command = from = where = nullptr; }
 
-FileManager::FileManager(Users* u) {
+FileManager::FileManager(Users* u) { users = u; }
+
+FileManager::~FileManager() {
+    delete command;
+    delete from;
+    delete where;
+}
+
+void FileManager::InputCommand() {
+    string userInput = "";
+    string commandUser = "";
+    string fromUser = "";
+    string whereUser = "";
+
+    do {
+        cout << "> ";
+        getline(std::cin, userInput);
+
+        istringstream iss(userInput);
+        iss >> commandUser >> fromUser >> whereUser;
+
+        CommandDefinition(commandUser, fromUser, whereUser);
+    } while (commandUser != "clfm");
     
-    users = u;
+    cout << "До свидания!" << endl;
 }
 
 void FileManager::CommandDefinition(string commandUser, string fromUser, string whereUser) {
@@ -47,22 +75,47 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
 
         from = new char[lenghtFrom];
         strcpy_s(from, lenghtFrom, fromUser.c_str());
-        from[lenghtFrom] = '\0';
+        from[lenghtFrom - 1] = '\0';
 
         CreateAFolder();
     }
     else if (commandUser == "rndr") {
         int lenghtFrom = (fromUser.length()) + 1;
-        int lenghtWhere = (whereUser.length()) + 1;
+        int tempIndex = 0;
+        int index = 0;
+
+        string temp;
 
         from = new char[lenghtFrom];
         strcpy_s(from, lenghtFrom, fromUser.c_str());
-        from[lenghtFrom] = '\0';
+        from[lenghtFrom - 1] = '\0';
 
+
+        for (int i = 0; i < lenghtFrom; i++) {
+            if (fromUser[i] == '/')
+                tempIndex++; // 2
+        }
+
+        for (int i = 0, j = 0; i < lenghtFrom; i++) {
+            if (fromUser[i] != '/')
+                temp += fromUser[i];
+            else {
+                temp += fromUser[i];
+                index++;
+            }
+
+            if (index == tempIndex)
+                break;
+        }
+
+        whereUser = temp += whereUser;
+
+        int lenghtWhere = (whereUser.length()) + 1;
+        
         where = new char[lenghtWhere];
         strcpy_s(where, lenghtWhere, whereUser.c_str());
-        where[lenghtWhere] = '\0';
-
+        where[lenghtWhere - 1] = '\0';
+        
         RenameFolder();
     }
 }
@@ -86,25 +139,18 @@ void FileManager::CreateAFolder() {
         cout << "Директория создана!" << endl;
     else
         cout << "Ошибка создания директории!" << endl;
-
-    /*
-    string folder;
-    cout << "> ";
-    cin >> folder;
-
-    int lenght = (folder.length()) + 1;
-    char* nameFolder = new char[lenght];
-    strcpy_s(nameFolder, lenght, folder.c_str());
-    nameFolder[lenght] = '\0';
-
-    if(_mkdir(nameFolder) == 0)
-        cout << "Директория создана!" << endl;
-    else
-        cout << "Ошибка создания директории!" << endl;
-    */
 }
 
 void FileManager::CreateFile() {
+    ofstream out(from);
+
+    if (out.is_open()) {
+        out << where;
+
+        out.close();
+    }
+    else
+        cout << "Не удалось открыть файл!" << endl;
 }
 
 void FileManager::RenameFolder() {
@@ -112,32 +158,6 @@ void FileManager::RenameFolder() {
         cout << "Директория переименована!" << endl;
     else
         cout << "Ошибка переименования директории!" << endl;
-
-    /*
-    string folder = "D:/ШАГ/2 курс/ООП/FileManager 15.05.2023/FileManager 15.05.2023/";
-    string folderTemp;
-    cout << "Введите папку которую хотите перименовать: ";
-    cin >> folderTemp;
-
-    folder += folderTemp;
-
-    int lenght = (folder.length()) + 1;
-    char* oldFolder = new char[lenght];
-    strcpy_s(oldFolder, lenght, folder.c_str());
-
-    cout << "Введите новое название: ";
-    cin >> folderTemp;
-
-    int l = (folderTemp.length()) + 1;
-    char* newFolder = new char[l];
-    strcpy_s(newFolder, l, folderTemp.c_str());
-
-    if (rename(oldFolder, newFolder) == 0)
-        cout << "Директория переименована!" << endl;
-    else
-        cout << "Ошибка переименования директории!" << endl;
-    */
-    // int rename(const char* old_filename, const char* new_filename);
 }
 
 void FileManager::RenameFile() {
@@ -147,12 +167,44 @@ void FileManager::CopyFolder() {
 }
 
 void FileManager::CopyFile() {
+    ofstream out;
+    out.open(from, ios::out | ios::trunc);
+
+    ifstream in;
+    in.open(where, ios::in);
+
+    if (in) {
+        do {
+            char character;
+
+            in.get(character);
+
+            out.put(character);
+        } while (in);
+        
+        out.close();
+        in.close();
+    } 
+    else 
+        cout << "Не удалось открыть файл!" << endl;
 }
 
 void FileManager::CalculateSizeFolder() {
+    
 }
 
 void FileManager::CalculateSizeFile() {
+    ifstream in(from, ios::binary | ios::in);
+
+    if (in) {
+        in.seekg(0, ios::end);
+
+        cout << "Размер файла: " << in.tellg() / 1024 << " КБ" << endl;
+
+        in.close();
+    } 
+    else
+        cout << "Не удалось открыть файл!" << endl;
 }
 
 void FileManager::SearchByMask() {

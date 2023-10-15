@@ -22,33 +22,22 @@ using namespace std;
     szf - size file
 
     cin >> command >> from >> where;
+
+    login - уникальный, можно не писать ФИО
+
+    Добавить директорию по умолчанию?
 */
 
 int main() {
     setlocale(0, "");
     SetConsoleCP(1251);
-    
-    string command;
-    string from;
-    string where;
 
-    cout << "> ";
-    cin >> command >> from >> where;
 
-    cout << command << " " << from << " " << where << endl;
-
-    
     Users* user = new User;
     // user->Input();
 
     FileManager test(user);
-    test.CommandDefinition(command, from, where);
-
-    /*
-    test.ShowDiskContents();
-    test.CreateAFolder();
-    test.RenameFolder();
-    */
+    test.InputCommand();
 
     return 0;
 }

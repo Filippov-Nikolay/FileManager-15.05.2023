@@ -16,7 +16,9 @@ class FileManager {
 public:
 	FileManager();
 	FileManager(Users*);
+	~FileManager();
 
+	void InputCommand();
 	void CommandDefinition(string, string, string);
 
 	void ShowDiskContents() const; // Показать содержимое диска
@@ -30,4 +32,3 @@ public:
 	void CalculateSizeFile(); // Размер файла
 	void SearchByMask(); // Поиск по маске
 };
-
