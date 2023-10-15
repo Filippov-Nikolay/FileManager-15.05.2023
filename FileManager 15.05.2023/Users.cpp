@@ -1,4 +1,4 @@
-#include "Users.h"
+ï»¿#include "Users.h"
 
 Users::Users() {
 	cout << "C" << endl;
@@ -13,35 +13,35 @@ Users::Users() {
 }
 
 void Users::Input() {
-	// Âõîä èëè ðåãèñòðàöèÿ
+	// Ð’Ñ…Ð¾Ð´ Ð¸Ð»Ð¸ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ
 
 	string tempLog;
 	string tempPass;
 
 	int userChoice;
 
-	cout << "Âõîä - 1. Ðåãèñòðàöèÿ - 2\n> ";
+	cout << "Ð’Ñ…Ð¾Ð´ - 1. Ð ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ - 2\n> ";
 	cin >> userChoice;
 
 	if (userChoice == 1) {
-		cout << "/* ÂÕÎÄ */" << endl << endl;
+		cout << "/* Ð’Ð¥ÐžÐ” */" << endl << endl;
 
 		do {
 			do {
-				cout << "Ââåäèòå ëîãèí: ";
+				cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð»Ð¾Ð³Ð¸Ð½: ";
 				cin >> tempLog;
 
 				if (!logUs->SearchLogin(tempLog)) {
-					cout << "Òàêîãî ëîãèíà íåò!\nÍàïèøèòå: reg - äëÿ ðåãèñòðàöèè" << endl << endl;
+					cout << "Ð¢Ð°ÐºÐ¾Ð³Ð¾ Ð»Ð¾Ð³Ð¸Ð½Ð° Ð½ÐµÑ‚!\nÐÐ°Ð¿Ð¸ÑˆÐ¸Ñ‚Ðµ: reg - Ð´Ð»Ñ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ð¸" << endl << endl;
 				}
 			} while (!logUs->SearchLogin(tempLog));
 
-			cout << "Ââåäèòå ïàðîëü: ";
+			cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ: ";
 			cin >> tempPass;
 			logUs->Encryption(tempPass);
 
 			if (!logUs->Authorization(tempLog, tempPass))
-				cout << "Ââåä¸í íåâåðíûé ëîãèí èëè ïàðîëü!" << endl << endl;
+				cout << "Ð’Ð²ÐµÐ´Ñ‘Ð½ Ð½ÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Ð»Ð¾Ð³Ð¸Ð½ Ð¸Ð»Ð¸ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ!" << endl << endl;
 		} while (!logUs->Authorization(tempLog, tempPass));
 
 		firstEntry = true;
@@ -50,24 +50,24 @@ void Users::Input() {
 		logUs->InputLogUsAuthorization(firstName, lastName, login, firstEntry, access);
 		cout << endl;
 
-		cout << "/* ÄÎÁÐÎ ÏÎÆÀËÎÂÀÒÜ */" << endl << endl;		
+		cout << "/* Ð”ÐžÐ‘Ð Ðž ÐŸÐžÐ–ÐÐ›ÐžÐ’ÐÐ¢Ð¬ */" << endl << endl;		
 	}
 	else if (userChoice == 2) {
-		cout << "/* ÐÅÃÈÑÒÐÀÖÈß */" << endl << endl;
-		cout << "Ââåäèòå èìÿ: ";
+		cout << "/* Ð Ð•Ð“Ð˜Ð¡Ð¢Ð ÐÐ¦Ð˜Ð¯ */" << endl << endl;
+		cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¸Ð¼Ñ: ";
 		cin >> firstName;
 
-		cout << "Ââåäèòå ôàìèëèþ: ";
+		cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ„Ð°Ð¼Ð¸Ð»Ð¸ÑŽ: ";
 		cin >> lastName;
 
 		do {
-			cout << "Ñîçäàéòå ëîãèí: ";
+			cout << "Ð¡Ð¾Ð·Ð´Ð°Ð¹Ñ‚Ðµ Ð»Ð¾Ð³Ð¸Ð½: ";
 			cin >> login;
 			if (logUs->SearchLogin(login))
-				cout << "Òàêîé ëîãèí åñòü! Ïðèäóìàéòå äðóãîé" << endl << endl;
+				cout << "Ð¢Ð°ÐºÐ¾Ð¹ Ð»Ð¾Ð³Ð¸Ð½ ÐµÑÑ‚ÑŒ! ÐŸÑ€Ð¸Ð´ÑƒÐ¼Ð°Ð¹Ñ‚Ðµ Ð´Ñ€ÑƒÐ³Ð¾Ð¹" << endl << endl;
 		} while (logUs->SearchLogin(login));
 
-		cout << "Ñîçäàéòå ïàðîëü: ";
+		cout << "Ð¡Ð¾Ð·Ð´Ð°Ð¹Ñ‚Ðµ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ: ";
 		cin >> password;
 		logUs->Encryption(password);
 
@@ -81,10 +81,10 @@ void Users::Input() {
 }
 
 void Users::Print() const {
-	cout << "Èìÿ: " << firstName << endl;
-	cout << "Ôàìèëèÿ: " << lastName << endl;
-	cout << "Ëîãèí: " << login << endl;
-	cout << "Ïàðîëü: " << password << endl;
+	cout << "Ð˜Ð¼Ñ: " << firstName << endl;
+	cout << "Ð¤Ð°Ð¼Ð¸Ð»Ð¸Ñ: " << lastName << endl;
+	cout << "Ð›Ð¾Ð³Ð¸Ð½: " << login << endl;
+	cout << "ÐŸÐ°Ñ€Ð¾Ð»ÑŒ: " << password << endl;
 }
 
 

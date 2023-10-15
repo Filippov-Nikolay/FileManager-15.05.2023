@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <iostream>
 #include "LogUs.h"
 
@@ -6,14 +6,14 @@ using namespace std;
 
 class Users {
 protected:
-	LogUs* logUs; // Лог
-	string firstName; // Имя
-	string lastName; // Фамилия
-	string login; // Логин
-	string password; // Пароль
+	LogUs* logUs; // Р›РѕРі
+	string firstName; // РРјСЏ
+	string lastName; // Р¤Р°РјРёР»РёСЏ
+	string login; // Р›РѕРіРёРЅ
+	string password; // РџР°СЂРѕР»СЊ
 
-	bool firstEntry = true; // Первый вход
-	bool access; // Доступ
+	bool firstEntry = true; // РџРµСЂРІС‹Р№ РІС…РѕРґ
+	bool access; // Р”РѕСЃС‚СѓРї
 
 	unsigned int id;
 public:
@@ -23,8 +23,8 @@ public:
 	void Print() const;
 
 
-	// Аксессоры
-	// Геттеры
+	// РђРєСЃРµСЃСЃРѕСЂС‹
+	// Р“РµС‚С‚РµСЂС‹
 	string GetFirstName() const;
 	string GetLastName() const;
 	string GetLogin() const;
@@ -34,7 +34,7 @@ public:
 	bool GetAccess() const;
 
 
-	// Сеттеры
+	// РЎРµС‚С‚РµСЂС‹
 	void SetFirstName(string);
 	void SetLastName(string);
 	void SetLogin(string);

@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #include "LogUs.h"
 
 void LogUs::CreateLogUs() const { ofstream out("LogUs.txt", ios::app); }
@@ -20,7 +20,7 @@ void LogUs::InputLogUsRegistration(int id, string firstName, string lastName, st
 		out.close();
 	}
 	else
-		cout << "Ôàéë íå óäàëîñü îòêðûòü! (InputLogUsRegistration)" << endl;
+		cout << "Ð¤Ð°Ð¹Ð» Ð½Ðµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ! (InputLogUsRegistration)" << endl;
 }
 
 void LogUs::InputLogUsAuthorization(string firstName, string lastName, string login, bool firstEntry, bool access) const {
@@ -40,11 +40,11 @@ void LogUs::InputLogUsAuthorization(string firstName, string lastName, string lo
 		out.close();
 	}
 	else
-		cout << "Ôàéë íå óäàëîñü îòêðûòü! (InputLogUsAuthorization)" << endl;
+		cout << "Ð¤Ð°Ð¹Ð» Ð½Ðµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ! (InputLogUsAuthorization)" << endl;
 }
 
 void LogUs::Encryption(string& password) {
-	// Øèôðîâêà ïàðîëÿ
+	// Ð¨Ð¸Ñ„Ñ€Ð¾Ð²ÐºÐ° Ð¿Ð°Ñ€Ð¾Ð»Ñ
 
 	string symbolLowCase = "abcdefghijklmnopqrstuvwxyz";
 	string symbolUpCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -72,7 +72,7 @@ bool LogUs::SearchFirstName(string firstName) const {
 				return true;
 	}
 	else
-		cout << "Ôàéë íå óäàëîñü îòêðûòü! (SearchFirstName)" << endl;
+		cout << "Ð¤Ð°Ð¹Ð» Ð½Ðµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ! (SearchFirstName)" << endl;
 
 	return false;
 }
@@ -86,7 +86,7 @@ bool LogUs::SearchLastName(string lastName) const {
 				return true;
 	}
 	else
-		cout << "Ôàéë íå óäàëîñü îòêðûòü! (SearchLastName)" << endl;
+		cout << "Ð¤Ð°Ð¹Ð» Ð½Ðµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ! (SearchLastName)" << endl;
 
 	return false;
 }
@@ -100,7 +100,7 @@ bool LogUs::SearchLogin(string login) const {
 				return true;
 	}
 	else
-		cout << "Ôàéë íå óäàëîñü îòêðûòü! (SearchLogin)" << endl;
+		cout << "Ð¤Ð°Ð¹Ð» Ð½Ðµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ! (SearchLogin)" << endl;
 
 	return false;
 }
@@ -114,7 +114,7 @@ bool LogUs::SearchPassword(string password) const {
 				return true;
 	}
 	else
-		cout << "Ôàéë íå óäàëîñü îòêðûòü! (SearchLogin)" << endl;
+		cout << "Ð¤Ð°Ð¹Ð» Ð½Ðµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ! (SearchLogin)" << endl;
 
 	return false;
 }
