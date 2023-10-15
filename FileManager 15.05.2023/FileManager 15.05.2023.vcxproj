@@ -129,11 +129,17 @@
   <ItemGroup>
     <ClCompile Include="FileManager 15.05.2023.cpp" />
     <ClCompile Include="LogUs.cpp" />
+    <ClCompile Include="User.cpp" />
     <ClCompile Include="Users.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogUs.h" />
+    <ClInclude Include="User.h" />
     <ClInclude Include="Users.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
