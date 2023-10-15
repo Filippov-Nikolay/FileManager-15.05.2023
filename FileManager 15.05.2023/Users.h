@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
+#include "LogUs.h"
 
 using namespace std;
 
 class Users {
 protected:
-	// LogUs* logus;
+	LogUs* logUs;
 	string firstName; // Имя
 	string lastName; // Фамилия
 	string login; // Логин
