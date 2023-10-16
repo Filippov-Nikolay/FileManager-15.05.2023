@@ -153,7 +153,7 @@ bool LogUs::Authorization(string login, string password) const {
 
 
 bool LogUs::GetCheckingId(int id) const {
-	cout << "GET ID" << endl << endl;
+	// cout << "GET ID" << endl << endl;
 
 	ifstream in("LogUs.txt");
 
@@ -375,7 +375,7 @@ bool LogUs::GetAccess(string login, string password) const {
 				}
 
 		if (temp[3] == login && temp[4] == password) {
-			if (temp[6] == "access")
+			if (temp[6] == "allowed")
 				return true;
 			else
 				return false;

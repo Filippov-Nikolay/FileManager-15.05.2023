@@ -53,11 +53,9 @@ void User::Input() {
 		lastName = logUs->GetLastName(tempLog, tempPass);
 		login = logUs->GetLogin(tempLog, tempPass);
 		password = logUs->GetPassword(tempLog, tempPass);
-		firstEntry = logUs->GetFirstEntry(tempLog, tempPass);
-		access = logUs->GetAccess(tempLog, tempPass);
 
-		/*firstEntry = true;
-		access = true;*/
+		firstEntry = true;
+		access = true;
 
 		logUs->InputLogUsAuthorization(firstName, lastName, login, firstEntry, access);
 		cout << endl;

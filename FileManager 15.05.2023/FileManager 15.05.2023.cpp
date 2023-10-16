@@ -37,8 +37,8 @@ int main() {
     SetConsoleCP(1251);
 
     /*int c = 0;
-    std::string pwd;
-    std::cout << "Enter password: ";
+    string pwd;
+    cout << "Enter password: ";
 
     while (true)
     {
@@ -51,16 +51,14 @@ int main() {
         pwd += c;
     }
 
-    std::cout << "\nYou entered: " << pwd.c_str();
+    cout << "\nYou entered: " << pwd.c_str();
     return 0;*/
 
     Log log;
 
     Users* user = new User;
     user->Input();
-    // user->Input();
-
-    Users* user1 = new User;
+    user->Input();
 
     FileManager test(user, &log);
     test.InputCommand();
