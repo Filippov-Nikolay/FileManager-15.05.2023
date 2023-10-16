@@ -14,7 +14,7 @@ using namespace std;
 
     crdr - create dir
     rndr - rename dir
-    ltdr - list dr
+    lsdr - list dr
     szdr - size dir
 
     crf - create file
@@ -30,7 +30,11 @@ using namespace std;
 
 int main() {
     setlocale(0, "");
+    system("chcp 1251");
     SetConsoleCP(1251);
+
+    //string temp = "dir /B D:\\Folder >> D:\\Folder\\tempFile.txt";
+    //system(temp.c_str());
 
 
     Users* user = new User;

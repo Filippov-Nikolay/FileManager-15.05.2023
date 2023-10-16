@@ -22,9 +22,9 @@ public:
 	void CommandDefinition(string, string, string);
 
 	void ShowDiskContents() const; // Показать содержимое диска
-	void CreateAFolder(); // Создать папку
-	void CreateFile(); // Создать файл
-	void RenameFolder(); // Переименовать папку
+	void CreateAFolder() const; // Создать папку
+	void CreateFile() const; // Создать файл
+	void RenameFolder() const; // Переименовать папку
 	void RenameFile(); // Переименовать файл
 	void CopyFolder(); // Копировать папку
 	void CopyFile(); //  Копировать файл
