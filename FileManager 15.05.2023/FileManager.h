@@ -25,10 +25,12 @@ public:
 	void CreateAFolder() const; // Создать папку
 	void CreateFile() const; // Создать файл
 	void RenameFolder() const; // Переименовать папку
-	void RenameFile(); // Переименовать файл
+	void RenameFile() const; // Переименовать файл
 	void CopyFolder(); // Копировать папку
-	void CopyFile(); //  Копировать файл
-	void CalculateSizeFolder(); // Размер папки
-	void CalculateSizeFile(); // Размер файла
-	void SearchByMask(); // Поиск по маске
+	void CopyFile() const; //  Копировать файл
+	void MoveFolder(); // Перемещение папки
+	void MoveFile(); // Перемещение файла
+	void CalculateSizeFolder() const; // Размер папки
+	void CalculateSizeFile() const; // Размер файла
+	void SearchByMask() const; // Поиск по маске
 };

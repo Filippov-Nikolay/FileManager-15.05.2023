@@ -33,10 +33,6 @@ int main() {
     system("chcp 1251");
     SetConsoleCP(1251);
 
-    //string temp = "dir /B D:\\Folder >> D:\\Folder\\tempFile.txt";
-    //system(temp.c_str());
-
-
     Users* user = new User;
     // user->Input();
 

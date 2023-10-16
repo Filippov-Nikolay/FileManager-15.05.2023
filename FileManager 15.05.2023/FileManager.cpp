@@ -88,14 +88,17 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
         cout << "\tcrdr - создаёт директорию: crdr путь/название_папки" << endl << endl;
         cout << "\trndr - переименовывает директорию: rndr путь_к_папке/название_папки новое_название" << endl << endl;
         cout << "\tcpdr - копирует директорию: cpdr путь_к_папке\\название_папки путь_к_папке\\" << endl << endl;
+        cout << "\tmvdr - перенести директорию: mvdr путь_к_папке\\название_папки путь\\" << endl << endl;
         cout << "\tlsdr - список файлов в каталоге: lsdr путь\\ - без указания пути, покажет тек. список" << endl << endl;
         cout << "\tszdr - размер директории: szdr путь\\" << endl << endl;
         cout << "\t------------------------------------ФАЙЛЫ---------------------------------------" << endl;
         cout << "\tcrf - создаёт файл: crf путь/название_файла.расширение" << endl << endl;
         cout << "\trnf - переименовывает файл: trnf путь_к_папке/название_файла.расширение новое_название.расширение" << endl << endl;
         cout << "\tcpf - копирует файл: cpf путь/название_файла.расширение путь_к_папке/" << endl << endl;
+        cout << "\tmvf - перености файл: mvf путь/название_файла.расширение путь_к_папке/" << endl << endl;
         cout << "\tszf - размер файла: szf путь/" << endl << endl;
         cout << "\t------------------------------------ОБЩЕЕ---------------------------------------" << endl;
+        cout << "\tshmsk - поиск по маске: shmsk путь_к_папке\\папка маска" << endl << endl;
         cout << "\tclear/cls/clr - очистить консоль" << endl << endl;
         cout << "\tclfm/exit/close - закрыть файловый менеджер" << endl;
         cout << "\t--------------------------------------------------------------------------------" << endl;
@@ -169,6 +172,20 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
         where[lenghtWhere - 1] = '\0';
 
         CopyFolder();
+    }
+    else if (commandUser == "mvdr") {
+        int lenghtFrom = (fromUser.length()) + 1;
+        int lenghtWhere = (whereUser.length()) + 1;
+
+        from = new char[lenghtFrom];
+        strcpy_s(from, lenghtFrom, fromUser.c_str());
+        from[lenghtFrom - 1] = '\0';
+
+        where = new char[lenghtWhere];
+        strcpy_s(where, lenghtWhere, whereUser.c_str());
+        where[lenghtWhere - 1] = '\0';
+
+        MoveFolder();
     }
     else if (commandUser == "lsdr") {
         string temp = fromUser;
@@ -269,6 +286,20 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
 
         CopyFile();
     }
+    else if (commandUser == "mvf") {
+        int lenghtFrom = (fromUser.length()) + 1;
+        int lenghtWhere = (whereUser.length()) + 1;
+
+        from = new char[lenghtFrom];
+        strcpy_s(from, lenghtFrom, fromUser.c_str());
+        from[lenghtFrom - 1] = '\0';
+
+        where = new char[lenghtWhere];
+        strcpy_s(where, lenghtWhere, whereUser.c_str());
+        where[lenghtWhere - 1] = '\0';
+
+        MoveFile();
+    }
     else if (commandUser == "szf") {
         int lenghtFrom = (fromUser.length()) + 1;
 
@@ -277,6 +308,20 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
         from[lenghtFrom - 1] = '\0';
 
         CalculateSizeFile();
+    }
+    else if (commandUser == "shmsk") {
+        int lenghtFrom = (fromUser.length()) + 1;
+        int lenghtWhere = (whereUser.length()) + 1;
+
+        from = new char[lenghtFrom];
+        strcpy_s(from, lenghtFrom, fromUser.c_str());
+        from[lenghtFrom - 1] = '\0';
+
+        where = new char[lenghtWhere];
+        strcpy_s(where, lenghtWhere, whereUser.c_str());
+        where[lenghtWhere - 1] = '\0';
+
+        SearchByMask();
     }
     else if (commandUser == "clear" || commandUser == "cls" || commandUser == "clr") {
         system("cls");
@@ -314,7 +359,7 @@ void FileManager::RenameFolder() const { // Переименовывает ка�
     else
         cout << "Ошибка переименования директории!" << endl;
 }
-void FileManager::RenameFile() { // Переименовать файл
+void FileManager::RenameFile() const { // Переименовать файл
     if (rename(from, where) == 0)
         cout << "Файл переименован!" << endl;
     else
@@ -432,12 +477,7 @@ void FileManager::CopyFolder() { // Копировать директорию с
 
     remove((tempFrom + "\\tempFile.txt").c_str());
 }
-
-
-// Метод remove
-
-
-void FileManager::CopyFile() { // Копировать файл
+void FileManager::CopyFile() const { // Копировать файл
     // cpf D:/Folder/file.txt D:/
 
     string tempFrom = from;
@@ -483,7 +523,165 @@ void FileManager::CopyFile() { // Копировать файл
     else 
         cout << "Не удалось открыть файл!" << endl;
 }
-void FileManager::CalculateSizeFolder() { // Показывает размер директории
+void FileManager::MoveFolder() { // Переносит директорию
+    // Получить исходную папку
+    // Куда переместить
+    // mvdr D:\Folder D:\t_move
+
+    int rez = _mkdir(where);
+    cout << rez << endl;
+
+    if (rez == -1) {
+        cout << "Такая папка уже существует!" << endl << endl;
+        return;
+    }
+
+    string tempFrom = from;
+    string tempWhere = where;
+    string tempLastName = "";
+
+    int temp = 0;
+    int tempIndex = 0;
+
+    for (int i = 0; i < tempFrom.length(); i++) {
+        if (tempFrom[i] == '\\')
+            temp++;
+    }
+
+    for (int i = 0; i < tempFrom.length(); i++) {
+        if (tempFrom[i] == '\\')
+            tempIndex++;
+        if (temp == tempIndex)
+            tempLastName += tempFrom[i];
+    }
+
+    cout << "LastPath: " << tempLastName << endl;
+
+    // cpdr D:/test/hello D:/test/hello/world // hello
+
+    tempWhere += tempLastName; // D:/test/hello/world/hello
+
+    cout << "CREATE FOLDER: " << tempWhere << endl;
+
+    delete where;
+
+    where = new char[(tempWhere.length()) + 1];
+    strcpy_s(where, (tempWhere.length()) + 1, tempWhere.c_str());
+
+    if (_mkdir(where) == 0)
+        cout << "Папка создана!" << endl;
+    else
+        cout << "Ошибка создания директории или такая директория уже есть!" << endl;
+
+
+    // cpdr D:\Folder D:\t
+    // теперь нужно работать с from и tempWhere
+
+    string s = "dir " + tempFrom + " /B >> " + tempFrom + "\\tempFile.txt";
+
+    cout << s << endl;
+
+    system(s.c_str());
+
+
+    // Массив который будет хранить названия файлов
+
+    cout << "tempFrom: " << tempFrom << endl;
+    cout << "tempWhere: " << tempWhere << endl;
+    cout << "tempLastName: " << tempLastName << endl;
+
+    // Открываю tempFile.txt
+    ifstream inTemp((tempFrom + "\\tempFile.txt").c_str());
+    string tempFile;
+
+    do {
+        // Получаю названия других файлов
+        char buff[90]{};
+        inTemp.getline(buff, 90);
+
+        for (int i = 0; i < strlen(buff); i++) {
+            if (buff[i] != '\n')
+                tempFile += buff[i];
+            else
+                break;
+        }
+
+        if (tempFile != "tempFile.txt") {
+            ifstream in((tempFrom + "\\" + tempFile).c_str(), ios::in);
+            ofstream out((tempWhere + "\\" + tempFile).c_str(), ios::out | ios::trunc);
+
+            do {
+                char character = '\0';
+                in.get(character);
+                out.put(character);
+            } while (in);
+
+            in.close();
+            out.close();
+
+            remove((tempFrom + "\\" + tempFile).c_str());
+        }
+
+        tempFile = "";
+    } while (inTemp);
+
+    inTemp.close();
+
+    remove((tempFrom + "\\tempFile.txt").c_str());
+    _rmdir((tempFrom).c_str());
+
+    cout << "Директория перемещена" << endl << endl;
+}
+void FileManager::MoveFile() { // Перемещение файла
+    // mvf D:/Folder/file.txt D:/
+
+    string tempFrom = from;
+    string tempWhere = where;
+    string tempLastName = "";
+
+    int temp = 0;
+    int tempIndex = 0;
+
+    for (int i = 0; i < tempFrom.length(); i++) {
+        if (tempFrom[i] == '/')
+            temp++;
+    }
+
+    for (int i = 0; i < tempFrom.length(); i++) {
+        if (tempFrom[i] == '/')
+            tempIndex++;
+        if (temp == tempIndex)
+            tempLastName += tempFrom[i + 1];
+    }
+
+    cout << "LastPath: " << tempLastName << endl;
+    cout << "PATH: " << tempFrom << endl;
+
+    ifstream in;
+    in.open((tempFrom).c_str(), ios::in);
+
+    ofstream out;
+    out.open((tempWhere + tempLastName).c_str(), ios::out | ios::trunc);
+
+    if (in) {
+        do {
+            char character = '\0';
+
+            in.get(character);
+            out.put(character);
+        } while (in);
+
+        out.close();
+        in.close();
+
+        remove((tempFrom).c_str());
+
+        cout << "Файл перемещён!" << endl;
+    }
+    else
+        cout << "Не удалось открыть файл!" << endl;
+}
+void FileManager::CalculateSizeFolder() const { // Показывает размер директории
     // Размер всех файлов
     // Алгоритм перебора
     // Или узнать через консоль?
@@ -530,7 +728,7 @@ void FileManager::CalculateSizeFolder() { // Показывает размер �
 
     cout << "Размер директории: " << size << " Байт" << endl;
 }
-void FileManager::CalculateSizeFile() { // Показывает размер файла
+void FileManager::CalculateSizeFile() const { // Показывает размер файла
     ifstream in(from, ios::binary | ios::in);
 
     if (in) {
@@ -543,11 +741,19 @@ void FileManager::CalculateSizeFile() { // Показывает размер ф�
     else
         cout << "Не удалось открыть или найти файл!" << endl;
 }
-
-void FileManager::SearchByMask() {
+void FileManager::SearchByMask() const { // Поиск по маске
     // Через консоль?
     // Записывать рез. поиска в файл
     // Читать из файла
+    // dir /b Folder\file.*
+    // shmsk D:\Folder file.*
 
+    string tempFrom = from;
+    string tempWhere = where;
+    string tempLastName = "";
+    string command = "";
+   
+    command = "dir /b " + tempFrom + "\\" + tempWhere;
 
+    system(command.c_str());
 }
