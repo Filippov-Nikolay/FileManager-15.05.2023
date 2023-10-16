@@ -53,20 +53,23 @@ void FileManager::InputCommand() {
     string fromUser = "";
     string whereUser = "";
 
-    // БАГ с enter
-
-    do {
+    while (true) {
         cout << "> ";
-        getline(std::cin, userInput);
+        getline(cin, userInput);
+
+        if (userInput == "clfm" || userInput == "close" || userInput == "exit")
+            break;
 
         istringstream iss(userInput);
         iss >> commandUser >> fromUser >> whereUser;
 
-        CommandDefinition(commandUser, fromUser, whereUser);
+        if (commandUser != "")
+            CommandDefinition(commandUser, fromUser, whereUser);
 
+        commandUser = "";
         fromUser = "";
         whereUser = "";
-    } while (commandUser != "clfm");
+    }
     
     cout << "До свидания!" << endl;
 }
@@ -81,14 +84,20 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
     
     if (commandUser == "help" || commandUser == "h") {
         cout << "\t--------------------------------------------------------------------------------" << endl;
+        cout << "\t---------------------------------ДИРЕКТОРИИ-------------------------------------" << endl;
         cout << "\tcrdr - создаёт директорию: crdr путь/название_папки" << endl << endl;
         cout << "\trndr - переименовывает директорию: rndr путь_к_папке/название_папки новое_название" << endl << endl;
         cout << "\tcpdr - копирует директорию: cpdr путь_к_папке\\название_папки путь_к_папке\\" << endl << endl;
         cout << "\tlsdr - список файлов в каталоге: lsdr путь\\ - без указания пути, покажет тек. список" << endl << endl;
+        cout << "\tszdr - размер директории: szdr путь\\" << endl << endl;
+        cout << "\t------------------------------------ФАЙЛЫ---------------------------------------" << endl;
         cout << "\tcrf - создаёт файл: crf путь/название_файла.расширение" << endl << endl;
         cout << "\trnf - переименовывает файл: trnf путь_к_папке/название_файла.расширение новое_название.расширение" << endl << endl;
-        cout << "\tclear - очистить консоль" << endl << endl;
-        cout << "\tclfm - закрыть файловый менеджер" << endl;
+        cout << "\tcpf - копирует файл: cpf путь/название_файла.расширение путь_к_папке/" << endl << endl;
+        cout << "\tszf - размер файла: szf путь/" << endl << endl;
+        cout << "\t------------------------------------ОБЩЕЕ---------------------------------------" << endl;
+        cout << "\tclear/cls/clr - очистить консоль" << endl << endl;
+        cout << "\tclfm/exit/close - закрыть файловый менеджер" << endl;
         cout << "\t--------------------------------------------------------------------------------" << endl;
     }
     else if (commandUser == "crdr") {
@@ -176,6 +185,15 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
 
         ShowDiskContents();
     }
+    else if (commandUser == "szdr") {
+        int lenghtFrom = (fromUser.length()) + 1;
+
+        from = new char[lenghtFrom];
+        strcpy_s(from, lenghtFrom, fromUser.c_str());
+        from[lenghtFrom - 1] = '\0';
+
+        CalculateSizeFolder();
+    }
     else if (commandUser == "crf") {
         int lenghtFrom = (fromUser.length()) + 1;
         int lenghtWhere = (whereUser.length()) + 1;
@@ -229,7 +247,38 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
 
         RenameFile();
     }
-    else if (commandUser == "clear") {
+    else if (commandUser == "cpf") {
+        // Проверка на путь или название
+        // D:/t D:/test (скопировать папку t, в папку test)
+
+        if (fromUser == whereUser) { // D:/t D:/t
+            cout << "Невозможно скопировать файл с таким же названием и путём!" << endl << endl;
+            return;
+        }
+
+        int lenghtFrom = (fromUser.length()) + 1;
+        int lenghtWhere = (whereUser.length()) + 1;
+
+        from = new char[lenghtFrom];
+        strcpy_s(from, lenghtFrom, fromUser.c_str());
+        from[lenghtFrom - 1] = '\0';
+
+        where = new char[lenghtWhere];
+        strcpy_s(where, lenghtWhere, whereUser.c_str());
+        where[lenghtWhere - 1] = '\0';
+
+        CopyFile();
+    }
+    else if (commandUser == "szf") {
+        int lenghtFrom = (fromUser.length()) + 1;
+
+        from = new char[lenghtFrom];
+        strcpy_s(from, lenghtFrom, fromUser.c_str());
+        from[lenghtFrom - 1] = '\0';
+
+        CalculateSizeFile();
+    }
+    else if (commandUser == "clear" || commandUser == "cls" || commandUser == "clr") {
         system("cls");
     }
 }
@@ -271,19 +320,26 @@ void FileManager::RenameFile() { // Переименовать файл
     else
         cout << "Ошибка переименования файла!" << endl;
 }
-
-
-void FileManager::CopyFolder() {
+void FileManager::CopyFolder() { // Копировать директорию с файлами
     // Получить кол-во файлов
     // название папки
     // папка от куда и куда (полный путь)
     // создать папку
     // помещать туда файлы
     // тоже самое что и с размером папки
-    /*
-    if (!_mkdir(from) == 0)
-        if (rename(from, where) == 0)
-    */
+    // // cpdr D:\Folder D:\t
+    // D:\Folder D:\t
+
+    int rez = _mkdir(where);
+    cout << rez << endl;
+
+    if (rez == -1) {
+        cout << "Такая папка уже существует!" << endl << endl;
+        return;
+    }
+
+    // 0 = create
+    // -1 = error
 
     string tempFrom = from;
     string tempWhere = where;
@@ -378,19 +434,44 @@ void FileManager::CopyFolder() {
 }
 
 
-void FileManager::CopyFile() {
-    ofstream out;
-    out.open(from, ios::out | ios::trunc);
+// Метод remove
+
+
+void FileManager::CopyFile() { // Копировать файл
+    // cpf D:/Folder/file.txt D:/
+
+    string tempFrom = from;
+    string tempWhere = where;
+    string tempLastName = "";
+
+    int temp = 0;
+    int tempIndex = 0;
+
+    for (int i = 0; i < tempFrom.length(); i++) {
+        if (tempFrom[i] == '/')
+            temp++;
+    }
+
+    for (int i = 0; i < tempFrom.length(); i++) {
+        if (tempFrom[i] == '/')
+            tempIndex++;
+        if (temp == tempIndex)
+            tempLastName += tempFrom[i + 1];
+    }
+
+    cout << "LastPath: " << tempLastName << endl;
 
     ifstream in;
-    in.open(where, ios::in);
+    in.open(from, ios::in);
 
+    ofstream out;
+    out.open((tempWhere + tempLastName).c_str(), ios::out | ios::trunc);
+    
     if (in) {
         do {
-            char character;
+            char character = '\0';
 
             in.get(character);
-
             out.put(character);
         } while (in);
         
@@ -402,29 +483,71 @@ void FileManager::CopyFile() {
     else 
         cout << "Не удалось открыть файл!" << endl;
 }
-
-void FileManager::CalculateSizeFolder() {
+void FileManager::CalculateSizeFolder() { // Показывает размер директории
     // Размер всех файлов
     // Алгоритм перебора
     // Или узнать через консоль?
-}
 
-void FileManager::CalculateSizeFile() {
+    string tempFrom = from;
+    string s = "dir " + tempFrom + " /B >> " + tempFrom + "\\tempFile.txt";
+    cout << s << endl;
+
+    system(s.c_str());
+
+    ifstream inTemp((tempFrom + "\\tempFile.txt").c_str());
+    string tempFile;
+
+    int size = 0;
+
+    do {
+        // Получаю названия других файлов
+        char buff[90]{};
+        inTemp.getline(buff, 90);
+
+        for (int i = 0; i < strlen(buff); i++) {
+            if (buff[i] != '\n')
+                tempFile += buff[i];
+            else
+                break;
+        }
+
+        ifstream in((tempFrom + "\\" + tempFile).c_str(), ios::in);
+
+        if (in) {
+            in.seekg(0, ios::end);
+
+            size += in.tellg();
+
+            in.close();
+        }
+
+        tempFile = "";
+    } while (inTemp);
+
+    inTemp.close();
+
+    remove((tempFrom + "\\tempFile.txt").c_str());
+
+    cout << "Размер директории: " << size << " Байт" << endl;
+}
+void FileManager::CalculateSizeFile() { // Показывает размер файла
     ifstream in(from, ios::binary | ios::in);
 
     if (in) {
         in.seekg(0, ios::end);
 
-        cout << "Размер файла: " << in.tellg() / 1024 << " КБ" << endl;
+        cout << "Размер файла: " << in.tellg() << " Байт" << endl;
 
         in.close();
     } 
     else
-        cout << "Не удалось открыть файл!" << endl;
+        cout << "Не удалось открыть или найти файл!" << endl;
 }
 
 void FileManager::SearchByMask() {
     // Через консоль?
     // Записывать рез. поиска в файл
     // Читать из файла
+
+
 }
