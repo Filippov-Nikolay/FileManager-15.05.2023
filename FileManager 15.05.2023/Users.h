@@ -14,32 +14,35 @@ protected:
 
 	bool firstEntry = true; // Первый вход
 	bool access; // Доступ
-
-	unsigned int id;
 public:
-	Users();
+	static unsigned int id;
 
-	void Input();
-	void Print() const;
+	Users();
+	Users(LogUs*, string, string, string, string, bool, bool);
+
+	virtual void Input() = 0;
+	virtual void Print() const = 0;
 
 
 	// Аксессоры
 	// Геттеры
-	string GetFirstName() const;
-	string GetLastName() const;
-	string GetLogin() const;
-	string GetPassword() const;
+	virtual string GetFirstName() const = 0;
+	virtual string GetLastName() const = 0;
+	virtual string GetLogin() const = 0;
+	virtual string GetPassword() const = 0;
 	
-	bool GetFirstEntry() const;
-	bool GetAccess() const;
+	virtual int GetId() const = 0;
+
+	virtual bool GetFirstEntry() const = 0;
+	virtual bool GetAccess() const = 0;
 
 
 	// Сеттеры
-	void SetFirstName(string);
-	void SetLastName(string);
-	void SetLogin(string);
-	void SetPassword(string);
+	virtual void SetFirstName(string) = 0;
+	virtual void SetLastName(string) = 0;
+	virtual void SetLogin(string) = 0;
+	virtual void SetPassword(string) = 0;
 
-	void SetFirstEntry(bool);
-	void SetAccess(bool);
+	virtual void SetFirstEntry(bool) = 0;
+	virtual void SetAccess(bool) = 0;
 };

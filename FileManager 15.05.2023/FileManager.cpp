@@ -37,9 +37,9 @@
     ПЕРЕСМОТРЕТЬ ЦИКЛ В LOGUS
 */
 
-FileManager::FileManager() { command = from = where = nullptr; }
+FileManager::FileManager() { command = from = where = nullptr; access = false; }
 
-FileManager::FileManager(Users* u) { users = u; }
+FileManager::FileManager(Users* u, Log* l) { users = u; log = l; }
 
 FileManager::~FileManager() {
     delete command;
@@ -48,10 +48,25 @@ FileManager::~FileManager() {
 }
 
 void FileManager::InputCommand() {
+    if (!users->GetAccess()) {
+        cout << "\t\t-----------------------" << endl;
+        cout << "\t\t/*В доступе отказано!*/" << endl;
+        cout << "\t\t-----------------------" << endl;
+        return;
+    }
+
+    cout << "\t\t-----------------------" << endl;
+    cout << "\t\t/* Доступе разрешён!* /" << endl;
+    cout << "\t\t-----------------------" << endl;
+
+    access = true;
+
     string userInput = "";
     string commandUser = "";
     string fromUser = "";
     string whereUser = "";
+
+    cin.ignore();
 
     while (true) {
         cout << "> ";
@@ -71,16 +86,14 @@ void FileManager::InputCommand() {
         whereUser = "";
     }
     
-    cout << "До свидания!" << endl;
+    cout << "\t\t---------------------" << endl;
+    cout << "\t\t/*   До свидания!  */" << endl;
+    cout << "\t\t---------------------" << endl;
 }
 
 void FileManager::CommandDefinition(string commandUser, string fromUser, string whereUser) {
-    if (users->GetAccess()) {
-        cout << "\t\t-----------------------" << endl;
-        cout << "\t\t/*В доступе отказано!*/" << endl;
-        cout << "\t\t-----------------------" << endl;
+    if (!access)
         return;
-    }
     
     if (commandUser == "help" || commandUser == "h") {
         cout << "\t--------------------------------------------------------------------------------" << endl;
@@ -326,18 +339,29 @@ void FileManager::CommandDefinition(string commandUser, string fromUser, string 
     else if (commandUser == "clear" || commandUser == "cls" || commandUser == "clr") {
         system("cls");
     }
+
+    log->InputLog(users->GetLogin(), commandUser);
 }
 
 void FileManager::ShowDiskContents() const { // Показать список каталога
+    if (!access)
+        return;
+
     system(from);
 }
 void FileManager::CreateAFolder() const { // Создать директорию
+    if (!access)
+        return;
+
     if (_mkdir(from) == 0)
         cout << "Директория создана!" << endl;
     else
         cout << "Ошибка создания директории или такая директория уже есть!" << endl;
 }
 void FileManager::CreateFile() const { // Создаёт файл
+    if (!access)
+        return;
+
     ofstream out(from);
 
     if (out.is_open()) {
@@ -354,12 +378,18 @@ void FileManager::CreateFile() const { // Создаёт файл
         cout << "Не удалось открыть файл!" << endl;
 }
 void FileManager::RenameFolder() const { // Переименовывает каталог
+    if (!access)
+        return;
+
     if (rename(from, where) == 0)
         cout << "Директория переименована!" << endl;
     else
         cout << "Ошибка переименования директории!" << endl;
 }
 void FileManager::RenameFile() const { // Переименовать файл
+    if (!access)
+        return;
+
     if (rename(from, where) == 0)
         cout << "Файл переименован!" << endl;
     else
@@ -374,6 +404,9 @@ void FileManager::CopyFolder() { // Копировать директорию с
     // тоже самое что и с размером папки
     // // cpdr D:\Folder D:\t
     // D:\Folder D:\t
+
+    if (!access)
+        return;
 
     int rez = _mkdir(where);
     cout << rez << endl;
@@ -480,6 +513,9 @@ void FileManager::CopyFolder() { // Копировать директорию с
 void FileManager::CopyFile() const { // Копировать файл
     // cpf D:/Folder/file.txt D:/
 
+    if (!access)
+        return;
+
     string tempFrom = from;
     string tempWhere = where;
     string tempLastName = "";
@@ -527,6 +563,9 @@ void FileManager::MoveFolder() { // Переносит директорию
     // Получить исходную папку
     // Куда переместить
     // mvdr D:\Folder D:\t_move
+
+    if (!access)
+        return;
 
     int rez = _mkdir(where);
     cout << rez << endl;
@@ -635,6 +674,9 @@ void FileManager::MoveFolder() { // Переносит директорию
 void FileManager::MoveFile() { // Перемещение файла
     // mvf D:/Folder/file.txt D:/
 
+    if (!access)
+        return;
+
     string tempFrom = from;
     string tempWhere = where;
     string tempLastName = "";
@@ -686,6 +728,9 @@ void FileManager::CalculateSizeFolder() const { // Показывает разм
     // Алгоритм перебора
     // Или узнать через консоль?
 
+    if (!access)
+        return;
+
     string tempFrom = from;
     string s = "dir " + tempFrom + " /B >> " + tempFrom + "\\tempFile.txt";
     cout << s << endl;
@@ -729,6 +774,9 @@ void FileManager::CalculateSizeFolder() const { // Показывает разм
     cout << "Размер директории: " << size << " Байт" << endl;
 }
 void FileManager::CalculateSizeFile() const { // Показывает размер файла
+    if (!access)
+        return;
+    
     ifstream in(from, ios::binary | ios::in);
 
     if (in) {
@@ -747,6 +795,8 @@ void FileManager::SearchByMask() const { // Поиск по маске
     // Читать из файла
     // dir /b Folder\file.*
     // shmsk D:\Folder file.*
+    if (!access)
+        return;
 
     string tempFrom = from;
     string tempWhere = where;

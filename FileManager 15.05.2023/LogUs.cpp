@@ -150,3 +150,241 @@ bool LogUs::Authorization(string login, string password) const {
 
 	return false;
 }
+
+
+bool LogUs::GetCheckingId(int id) const {
+	cout << "GET ID" << endl << endl;
+
+	ifstream in("LogUs.txt");
+
+	string temp[8];
+	int index = 0;
+
+	do {
+		char buff[300]{};
+
+		in.getline(buff, 300);
+
+		for (int i = 0; i < strlen(buff); i++)
+			if (buff[i] == '[')
+				for (int j = (i + 2); j < strlen(buff); j++) {
+					if (buff[j] == '|') {
+						index++;
+						break;
+					}
+					temp[index] += buff[j];
+				}
+
+		
+		//cout << temp[0] << endl;
+		//cout << id << endl;
+
+		//log = 0
+		//id = 0
+
+		if (atoi(temp[0].c_str()) == 0 && atoi(temp[0].c_str()) == id)
+			return false;
+
+		if (atoi(temp[0].c_str()) == id)
+			return true;
+		
+
+		for (int i = 0; i < index; i++)
+			temp[i] = "";
+
+		index = 0;
+	} while (in);
+
+	return false;
+}
+
+string LogUs::GetFirstName(string login, string password) const {
+	ifstream in("LogUs.txt");
+
+	string temp[8];
+	int index = 0;
+
+	do {
+		char buff[300]{};
+
+		in.getline(buff, 300);
+
+		for (int i = 0; i < strlen(buff); i++)
+			if (buff[i] == '|')
+				for (int j = (i + 2); j < strlen(buff); j++) {
+					if (buff[j] == ' ') {
+						index++;
+						break;
+					}
+					temp[index] += buff[j];
+				}
+
+		if (temp[3] == login && temp[4] == password)
+			return temp[1];
+
+		for (int i = 0; i < index; i++)
+			temp[i] = "";
+
+		index = 0;
+	} while (in);
+}
+string LogUs::GetLastName(string login, string password) const {
+	ifstream in("LogUs.txt");
+
+	string temp[8];
+	int index = 0;
+
+	do {
+		char buff[300]{};
+
+		in.getline(buff, 300);
+
+		for (int i = 0; i < strlen(buff); i++)
+			if (buff[i] == '|')
+				for (int j = (i + 2); j < strlen(buff); j++) {
+					if (buff[j] == ' ') {
+						index++;
+						break;
+					}
+					temp[index] += buff[j];
+				}
+
+		if (temp[3] == login && temp[4] == password)
+			return temp[2];
+
+		for (int i = 0; i < index; i++)
+			temp[i] = "";
+
+		index = 0;
+	} while (in);
+}
+string LogUs::GetLogin(string login, string password) const {
+	ifstream in("LogUs.txt");
+
+	string temp[8];
+	int index = 0;
+
+	do {
+		char buff[300]{};
+
+		in.getline(buff, 300);
+
+		for (int i = 0; i < strlen(buff); i++)
+			if (buff[i] == '|')
+				for (int j = (i + 2); j < strlen(buff); j++) {
+					if (buff[j] == ' ') {
+						index++;
+						break;
+					}
+					temp[index] += buff[j];
+				}
+
+		if (temp[3] == login && temp[4] == password)
+			return temp[3];
+
+		for (int i = 0; i < index; i++)
+			temp[i] = "";
+
+		index = 0;
+	} while (in);
+}
+string LogUs::GetPassword(string login, string password) const {
+	ifstream in("LogUs.txt");
+
+	string temp[8];
+	int index = 0;
+
+	do {
+		char buff[300]{};
+
+		in.getline(buff, 300);
+
+		for (int i = 0; i < strlen(buff); i++)
+			if (buff[i] == '|')
+				for (int j = (i + 2); j < strlen(buff); j++) {
+					if (buff[j] == ' ') {
+						index++;
+						break;
+					}
+					temp[index] += buff[j];
+				}
+
+		if (temp[3] == login && temp[4] == password)
+			return temp[4];
+
+		for (int i = 0; i < index; i++)
+			temp[i] = "";
+
+		index = 0;
+	} while (in);
+}
+bool LogUs::GetFirstEntry(string login, string password) const {
+	ifstream in("LogUs.txt");
+
+	string temp[8];
+	int index = 0;
+
+	do {
+		char buff[300]{};
+
+		in.getline(buff, 300);
+
+		for (int i = 0; i < strlen(buff); i++)
+			if (buff[i] == '|')
+				for (int j = (i + 2); j < strlen(buff); j++) {
+					if (buff[j] == ' ') {
+						index++;
+						break;
+					}
+					temp[index] += buff[j];
+				}
+
+		if (temp[3] == login && temp[4] == password) {
+			if (temp[5] == "signIn")
+				return false;
+			else
+				return true;
+		}
+			
+
+		for (int i = 0; i < index; i++)
+			temp[i] = "";
+
+		index = 0;
+	} while (in);
+}
+bool LogUs::GetAccess(string login, string password) const {
+	ifstream in("LogUs.txt");
+
+	string temp[8];
+	int index = 0;
+
+	do {
+		char buff[300]{};
+
+		in.getline(buff, 300);
+
+		for (int i = 0; i < strlen(buff); i++)
+			if (buff[i] == '|')
+				for (int j = (i + 2); j < strlen(buff); j++) {
+					if (buff[j] == ' ') {
+						index++;
+						break;
+					}
+					temp[index] += buff[j];
+				}
+
+		if (temp[3] == login && temp[4] == password) {
+			if (temp[6] == "access")
+				return true;
+			else
+				return false;
+		}
+
+
+		for (int i = 0; i < index; i++)
+			temp[i] = "";
+
+		index = 0;
+	} while (in);
+}

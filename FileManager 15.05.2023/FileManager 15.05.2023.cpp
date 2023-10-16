@@ -1,8 +1,11 @@
 ﻿#include <iostream>
 #include <Windows.h>
+#include <conio.h> // Для пароля
 
+#include "Log.h"
 #include "User.h"
 #include "FileManager.h"
+
 
 using namespace std;
 
@@ -33,10 +36,33 @@ int main() {
     system("chcp 1251");
     SetConsoleCP(1251);
 
+    /*int c = 0;
+    std::string pwd;
+    std::cout << "Enter password: ";
+
+    while (true)
+    {
+        c = _getch();
+        if (c == 0)
+            c = _getch();
+        if (c == '\r' || c == '\n')
+            break;
+        cout << '*';
+        pwd += c;
+    }
+
+    std::cout << "\nYou entered: " << pwd.c_str();
+    return 0;*/
+
+    Log log;
+
     Users* user = new User;
+    user->Input();
     // user->Input();
 
-    FileManager test(user);
+    Users* user1 = new User;
+
+    FileManager test(user, &log);
     test.InputCommand();
 
     return 0;

@@ -13,9 +13,11 @@ class FileManager {
 	char* command;
 	char* from;
 	char* where;
+
+	bool access;
 public:
 	FileManager();
-	FileManager(Users*);
+	FileManager(Users*, Log*);
 	~FileManager();
 
 	void InputCommand();

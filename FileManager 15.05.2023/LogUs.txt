@@ -1,2 +1,2 @@
-[ 1 | Sun Oct 15 17:47:47 2023 | Nikolay | Filippov | NikLogin | Njl123 | signIn | allowed ]
-[ 1 | Sun Oct 15 17:48:10 2023 | TestName | LastNameTest | LogTest | PbttxpseTftu | signIn | allowed ]
+
+[ 1 | Mon Oct 16 21:28:18 2023 | test | test | test | uftu | signIn | allowed ]
